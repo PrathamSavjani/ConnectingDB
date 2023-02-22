@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "State";
+}
+@model LOC_StateModel
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="LOC_State" asp-action="Save" enctype="multipart/form-data">
+            @Html.HiddenFor(x => x.StateID) @*doubt*@
+            @Html.HiddenFor(x => x.PhotoPath)
+            <div class="form-group">
+                <label>State Name</label>
+                <input type="text" placeholder="Enter State Name" asp-for="StateName" class="form-control" id="sta_name" />
+                <span asp-validation-for="StateName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>State Code</label>
+                <input type="text" placeholder="Enter State Code" asp-for="StateCode" class="form-control" />
+                <span asp-validation-for="StateCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <lable>Country Name</lable>
+                <select class="form-control" asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))">
+                    <option value="">Select Country</option>
+                </select>
+                <span asp-validation-for="CountryID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Created</label>
+                <input type="date" asp-for="CreationDate" class="form-control" />
+                <span asp-validation-for="CreationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Modified</label>
+                <input type="date" asp-for="ModificationDate" class="form-control" />
+                <span asp-validation-for="ModificationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Upload File</label>
+                <input type="file" asp-for="File" placeholder="Upload your file" class="form-control" />
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-success" />
+                <button asp-controller="LOC_Country" asp-action="Back" class="btn btn-danger">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

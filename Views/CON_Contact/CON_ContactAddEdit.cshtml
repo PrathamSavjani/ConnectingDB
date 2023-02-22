@@ -1,0 +1,134 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Contact";
+}
+@model CON_ContactModel
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="CON_Contact" asp-action="Save">
+            @Html.HiddenFor(x => x.ContactID) @*doubt*@
+            <div class="form-group">
+                <label>Contact Name</label>
+                <input type="text" placeholder="Enter Contact Name" asp-for="ContactName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Contact Moblie</label>
+                <input type="text" placeholder="Enter Contact Mobile" asp-for="ContactMobile" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Contact Address</label>
+                <input type="text" placeholder="Enter Contact Address" asp-for="ContactAddress" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Contact Email</label>
+                <input type="text" placeholder="Enter Contact Email" asp-for="ContactEmail" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <lable>Country Name</lable>
+                <select class="form-control" asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))" onchange="fnOnStateChange();">
+                    <option value="">Select Country</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <lable>State Name</lable>
+                <select class="form-control" asp-for="StateID" asp-items="@(new SelectList(ViewBag.StateList,"StateID","StateName"))" onchange="fnOnCityChange();">
+                    <option value="">Select State</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <lable>City Name</lable>
+                <select class="form-control" asp-for="CityID" asp-items="@(new SelectList(ViewBag.CityList,"CityID","CityName"))">
+                    <option value="">Select City</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Category ID</label>
+                <input type="text" placeholder="Enter Contact Category ID" asp-for="ContactCategoryID" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Created</label>
+                <input type="date" asp-for="CreationDate" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Modified</label>
+                <input type="date" asp-for="ModificationDate" class="form-control" />
+            </div>
+            <hr />
+            <input type="submit" value="Save" class="btn btn-success" />
+        </form>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        function fnOnStateChange() {
+            var CountryID = $("#CountryID").val();
+            if (CountryID !== "") {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropdownByCountry", "LOC_City")" + "?&CountryID=" + CountryID,
+                        data: {},
+                        datatype: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading combobox.");
+                        }
+                    });
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+            }
+        }
+
+        function fnOnCityChange() {
+            var StateID = $("#StateID").val();
+            if (StateID !== "") {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropdownByState", "CON_Contact")" + "?&StateID=" + StateID, 
+                        data: {},
+                        datatype: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#CityID").append($("<option></option>").val(value.cityID).html(value.cityName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading combobox.");
+                        }
+                    });
+            }
+            else {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+            }
+        }
+    </script>
+
+}

@@ -1,0 +1,111 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Contact";
+}
+@using System.Data
+@model DataTable
+
+<div class="row">
+    <div class="col-md-8" style="height:50px; display: flex; align-items: center; padding-top:10px">
+        <h3>Contact List</h3>
+    </div>
+    <div class="col-md-4" style="height:50px; display: flex; justify-content: center; align-items: center; padding-top:20px">
+        <a asp-controller="CON_Contact" asp-action="Add" class="btn btn-success" style="">+ Add Contact</a>
+    </div>
+</div>
+<hr />
+
+<div class="row">
+    <div id="sample_1_filter" class="dataTables_filter col-md-4"><label>Search : <input type="search" id="sample_1" class="form-control input-sm input-small input-inline" placeholder="Search" aria-controls="sample_1"></label></div>
+    <div class="col-md-8" align="right">
+        <form method="post" asp-controller="CON_Contact" asp-action="Filter">
+            <label>Filter: </label>
+            <input type="search" name="ContactName" class="form-control input-sm input-small input-inline" placeholder="Contact Name" value="" />
+            <input type="search" name="ContactAddress" class="form-control input-sm input-small input-inline" placeholder="Contact Address" value="" />
+            <input type="search" name="ContactMobile" class="form-control input-sm input-small input-inline" placeholder="Contact Mobile" value="" />
+            <input type="search" name="ContactEmail" class="form-control input-sm input-small input-inline" placeholder="Contact  Email" value="" />
+            <button type="submit" class="btn btn-sm btn-success">GO</button>
+        </form>
+    </div>
+</div>
+<br />
+
+<h2 style="color:green">@TempData["InsertMessage"]</h2>
+<h2 style="color:crimson">@TempData["DeleteMessage"]</h2>
+<h2 style="color:royalblue">@TempData["UpdateMessage"]</h2>
+
+<div class="table-responsive">
+    <table class="table table-responsive table-hover table-sm table-bordered" style="white-space: nowrap; !important text-align:center;" id="sample_1">
+    <thead style="background-color: #333;
+  color: white;">
+        <tr>
+            <th class="text-center">Contact Name</th>
+            <th class="text-center">Contact Mobile</th>
+            <th class="text-center">Contact Address</th>
+            <th class="text-center">Contact Email</th>
+            <th class="text-center">Country Name</th>
+            <th class="text-center">State Name</th>
+            <th class="text-center">City Name</th>
+            <th class="text-center">Contact Category Name</th>
+            <th class="text-center">Creation Date</th>
+            <th class="text-center">Modification Date</th>
+            <th class="text-center">Delete</th>
+            <th class="text-center">Edit</th>
+        </tr>
+    </thead>
+    <tbody id="sample_2">
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["ContactName"]</td>
+                <td>@dr["ContactMobile"]</td>
+                <td>@dr["ContactAddress"]</td>
+                <td>@dr["ContactEmail"]</td>
+                <td>@dr["CountryName"]</td>
+                <td>@dr["StateName"]</td>
+                <td>@dr["CityName"]</td>
+                <td>@dr["ContactCategoryName"]</td>
+                <td>@Convert.ToDateTime(dr["CreationDate"]).ToString()</td>
+                <td>@Convert.ToDateTime(dr["ModificationDate"]).ToString()</td>
+                <td>
+                    <form method="post" asp-controller="CON_Contact" asp-action="Delete">
+                        <input type="hidden" name="ContactID" value="@Convert.ToInt32(dr["ContactID"].ToString())">
+                        <button onclick="return confirm('Are you Sure you want to delete :@dr["ContactID"]')" type="submit" class="btn btn-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-controller="CON_Contact" asp-action="Add">
+                        <input type="hidden" name="ContactID" value="@Convert.ToInt32(dr["ContactID"])" />
+                        <button type="submit" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+
+@section Scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $("#sample_1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#sample_2 tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+}

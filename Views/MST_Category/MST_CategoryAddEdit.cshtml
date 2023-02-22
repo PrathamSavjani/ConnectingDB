@@ -1,0 +1,40 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Contact Category";
+}
+@model MST_CategoryModel
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="MST_Category" asp-action="Save">
+            @Html.HiddenFor(x => x.ContactCategoryID) @*doubt*@
+            <div class="form-group">
+                <label>Contact Category Name</label>
+                <input type="text" placeholder="Enter Contact Category Name" asp-for="ContactCategoryName" class="form-control" id="con_name" />
+                <span asp-validation-for="ContactCategoryName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Created</label>
+                <input type="date" asp-for="CreationDate" class="form-control" />
+                <span asp-validation-for="CreationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Modified</label>
+                <input type="date" asp-for="ModificationDate" class="form-control" />
+                <span asp-validation-for="ModificationDate" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-success" />
+                <button asp-controller="MST_Category" asp-action="Back" class="btn btn-danger">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
